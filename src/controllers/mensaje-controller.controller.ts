@@ -30,12 +30,13 @@ export class MensajeControllerController {
     }
 
     @Put(':id')
-    update (@Body() updateMensajeDto: CreateMensajeDto , @Res() response,@Param('id') idMensaje){
-        this.mensajeService.updateMensaje(idMensaje, updateMensajeDto).then(mensaje =>{
-            response.statu(HttpStatus.OK).json(mensaje);
-        }).catch(() =>{
-            response.status(HttpStatus.FORBIDDEN).json({mensaje:"Error en la actualizacion del mensaje"});
-        });
+    async update (@Body() updateMensajeDto: CreateMensajeDto , @Res() response,@Param('id') idMensaje){
+        try{
+            const mensaje = await this.mensajeService.updateMensaje(idMensaje, updateMensajeDto)
+            return response.statu(HttpStatus.OK).json(mensaje);
+        }catch(err){
+            return response.status(HttpStatus.FORBIDDEN).json({mensaje:err});
+        }
     }
 
     @Delete(':id')
